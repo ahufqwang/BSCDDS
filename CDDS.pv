@@ -1,0 +1,203 @@
+free ESB_DMCB_registration_net : channel [private].
+free SDi_DMCB_registration_net : channel [private].
+free ESA_DMCA_registration_net : channel [private].
+free public_net : channel.
+free ESA_ESB_public_net: channel.
+free SDi_ESB_public_net: channel.
+
+(*Hash Functions*)
+fun HashFunOne(bitstring) : bitstring.
+fun HashFunTwo(bitstring, bitstring) : bitstring.
+fun HashFunThree(bitstring, bitstring, bitstring) : bitstring.
+fun HashFunFour(bitstring, bitstring, bitstring, bitstring) : bitstring.
+fun HashFunEight(bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring, bitstring) : bitstring.
+
+const g : bitstring.
+const Serv : bitstring.
+const ti : bitstring.
+const Tc : bitstring.
+const tesa : bitstring.
+const tesb : bitstring.
+free EIDb : bitstring.
+free EIDa : bitstring.
+free s : bitstring [private].
+free lski : bitstring [private].
+free lskesb : bitstring [private].
+free lskesa : bitstring [private].
+free RIDi : bitstring [private].
+free LPKi : bitstring [private].
+free aski : bitstring [private].
+free m : bitstring[private].
+free LPKesa : bitstring.
+free LPKesb : bitstring.
+
+fun ScalarMul(bitstring, bitstring) : bitstring.
+fun G1_Add(bitstring, bitstring) : bitstring.
+fun big_Mul(bitstring, bitstring) : bitstring.
+fun big_Add(bitstring, bitstring) : bitstring.
+fun Enc(bitstring, bitstring) : bitstring.
+fun ConcatFour(bitstring, bitstring, bitstring, bitstring) : bitstring.
+fun ConcatThree(bitstring, bitstring, bitstring) : bitstring.
+fun Pair(bitstring, bitstring) : bitstring.
+fun GT_exp(bitstring, bitstring) : bitstring.
+fun GT_exp2(bitstring, bitstring, bitstring) : bitstring.
+fun XOR(bitstring, bitstring) : bitstring.
+fun GT_Div(bitstring, bitstring) : bitstring.
+fun Storage(bitstring) : bitstring.
+
+reduc forall m9 : bitstring, m10 : bitstring; G1_Sub(G1_Add(m9, m10), m9) = m10.
+reduc forall m11 : bitstring, m12 : bitstring; big_Sub(big_Add(m11, m12), m11) = m12.
+reduc forall plain : bitstring, key : bitstring; Dec(Enc(plain, key), key) = plain.
+reduc forall m13 : bitstring, m14 : bitstring, m15 : bitstring, m16 : bitstring; SeparateFour_1(ConcatFour(m13,m14,m15, m16)) = m13.
+reduc forall m13 : bitstring, m14 : bitstring, m15 : bitstring, m16 : bitstring; SeparateFour_2(ConcatFour(m13,m14,m15, m16)) = m14.
+reduc forall m13 : bitstring, m14 : bitstring, m15 : bitstring, m16 : bitstring; SeparateFour_3(ConcatFour(m13,m14,m15, m16)) = m15.
+reduc forall m13 : bitstring, m14 : bitstring, m15 : bitstring, m16 : bitstring; SeparateFour_4(ConcatFour(m13,m14,m15, m16)) = m16.
+reduc forall m17 : bitstring, m18 : bitstring, m19 : bitstring; SeparateThree_1(ConcatThree(m17,m18,m19)) = m17.
+reduc forall m17 : bitstring, m18 : bitstring, m19 : bitstring; SeparateThree_2(ConcatThree(m17,m18,m19)) = m18.
+reduc forall m17 : bitstring, m18 : bitstring, m19 : bitstring; SeparateThree_3(ConcatThree(m17,m18,m19)) = m19.
+reduc forall m33 : bitstring; Get(Storage(m33)) = m33. 
+
+equation forall m1 : bitstring, m2 : bitstring; big_Add(m1, m2) = big_Add(m2, m1).
+equation forall m3 : bitstring, m4 : bitstring; G1_Add(m3, m4) = G1_Add(m4, m3).
+equation forall m5 : bitstring, m6 : bitstring; ScalarMul(m5, ScalarMul(m6, g)) = ScalarMul(m6, ScalarMul(m5, g)).
+equation forall m7 : bitstring, m8 : bitstring; big_Mul(m7, m8) = big_Mul(m8, m7).
+equation forall m23 : bitstring, m24 : bitstring; Pair(m23, m24) = Pair(m24, m23).
+equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = GT_exp(Pair(m20, m21), m22).
+equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = GT_exp(Pair(m20, m21), m22).
+equation forall m25 : bitstring, m26 : bitstring; XOR(m25, m26) = XOR(m26, m25).
+(*equation forall m30 : bitstring, m31 : bitstring, m32 : bitstring; GT_Div(GT_exp(m30, m31), GT_exp(m30, m32)) = GT_exp(m30, big_Sub(m31, m32)).
+equation forall m27 : bitstring, m28 : bitstring, m29 : bitstring; GT_exp(Pair(m27, m28), m29) = Pair(ScalarMul(m29, m27), m28).
+equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = Pair(ScalarMul(m22, m20), m22).
+equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = Pair(m20, ScalarMul(m22, m21)).
+equation forall m1 : bitstring, m2 : bitstring; G1_Add(ScalarMul(m1, g), ScalarMul(m2, g)) = ScalarMul(big_Add(m1, m2), g).*)
+
+
+query attacker(s).
+query attacker(lski).
+query attacker(LPKi).
+query attacker(aski).
+query attacker(lskesa).
+query attacker(lskesb).
+query attacker(m).
+
+noninterf RIDi.
+
+query inj-event (endES_Veri) ==> inj-event (endSDi_Sig).
+(*query inj-event (endESB_ReEnc) ==> inj-event (endESA_Enc).
+query inj-event (endSDi_Dec) ==> inj-event (endESB_ReEnc).*)
+
+event endSDi_Sig.
+event endES_Veri.
+event endESA_Enc.
+event endESB_ReEnc.
+event endSDi_Dec.
+
+let pDMCB = 
+(*生成系统参数*)
+let Ppub = ScalarMul(s, g) in
+let omega = HashFunThree(Serv, s, Tc) in
+let W = ScalarMul(omega, g) in
+(*生成边缘服务器公私钥*)
+in (ESB_DMCB_registration_net, (EIDb : bitstring, Serv : bitstring));
+let LPKesb = ScalarMul(lskesb, g) in
+out (public_net, (EIDb, LPKesb));
+out (ESB_DMCB_registration_net, (lskesb, LPKesb, W));
+(*生成智能设备数据公私钥*)
+in (SDi_DMCB_registration_net, (RIDi : bitstring, Serv : bitstring));
+let LPKi = ScalarMul(lski, g) in
+out (SDi_DMCB_registration_net, (lski, LPKi, omega, W));
+out(ESB_DMCB_registration_net, (LPKi, RIDi));
+0.
+
+let pDMCA = 
+(*生成边缘服务器公私钥*)
+in (ESA_DMCA_registration_net, (EIDa : bitstring, Serv : bitstring));
+let LPKesa = ScalarMul(lskesa, g) in
+out (public_net, LPKesa);
+out (ESA_DMCA_registration_net, (lskesa));
+0.
+
+let pSDi = 
+out(SDi_DMCB_registration_net, (RIDi, Serv));
+in (SDi_DMCB_registration_net, (lski : bitstring, LPKi : bitstring, omega : bitstring, W : bitstring));
+in (public_net, (LPKesb : bitstring));
+(*签名*)
+new Mserv : bitstring;
+let APKi = ScalarMul(aski, g) in
+let SSKi = ScalarMul(lski, LPKesb) in
+let TSKi = ScalarMul(aski, LPKesb) in
+let PIDi = G1_Add(LPKi, TSKi) in
+let thetai = HashFunEight(W, ti, Mserv, TSKi, SSKi, APKi, PIDi, RIDi) in
+let sigmai = big_Add(aski, big_Mul(omega, thetai)) in
+event endSDi_Sig;
+out(SDi_ESB_public_net, (Mserv, APKi, PIDi, ti, sigmai, EIDa));
+(*解密*)
+in(SDi_ESB_public_net, (Re_C0 : bitstring, Cb1 : bitstring, Re_Cb2 : bitstring, tesb : bitstring));
+let rec_hi = HashFunOne(APKi) in
+let rec_rbi = HashFunTwo(SSKi, Serv) in
+let rec_SKbi = ScalarMul(rec_rbi, rec_hi) in
+let Y1 = XOR(HashFunOne(GT_Div(Re_Cb2, ScalarMul(HashFunThree(rec_SKbi, Serv, tesb), Cb1))), Cb1) in
+let rec_k = SeparateFour_1(Y1) in
+let rec_index = SeparateFour_2(Y1) in
+let rec_tesa = SeparateFour_4(Y1) in
+let rec_ED = Get(rec_index) in
+let rec_hed = HashFunOne(rec_ED) in
+if(Re_C0 = GT_exp(Pair(g,g), HashFunFour(rec_index, rec_k, tesa, rec_hed))) then
+event endSDi_Dec;
+0.
+
+let pESB =
+out(ESB_DMCB_registration_net, (EIDb, Serv));
+in(ESB_DMCB_registration_net, (lskesb : bitstring, LPKesb : bitstring, W : bitstring, LPKi : bitstring, RIDi : bitstring));
+(*对SDi进行认证*)
+in(SDi_ESB_public_net, (Mserv : bitstring, APKi : bitstring, PIDi : bitstring, ti : bitstring, sigmai : bitstring, EIDa : bitstring));
+let rec_TSKi = ScalarMul(lskesb, APKi) in
+let rec_LPKi = G1_Sub(PIDi, rec_TSKi) in
+if (rec_LPKi = LPKi) then 
+let rec_SSKi = ScalarMul(lskesb, rec_LPKi) in
+let rec_thetai = HashFunEight(W, ti, Mserv, rec_TSKi, rec_SSKi, APKi, PIDi, RIDi) in
+if (ScalarMul(sigmai, g) = G1_Add(APKi, ScalarMul(rec_thetai, W))) then
+event endES_Veri;
+(*重加密数据*)
+in(ESA_ESB_public_net, (Serv : bitstring, EIDa : bitstring, C0 : bitstring, Cb1 : bitstring, Cb2 : bitstring, tesa : bitstring));
+let rec_RSKab = ScalarMul(lskesb, LPKesa) in
+let rec_rab = HashFunTwo(rec_RSKab, Serv) in
+let rec_heidb = HashFunOne(EIDb) in 
+let rec_SKab = ScalarMul(rec_rab, rec_heidb) in
+let rbi = HashFunTwo(rec_SSKi, Serv) in
+let SKbi = ScalarMul(rbi, HashFunOne(APKi)) in
+let TKbi = G1_Add(rec_SKab, ScalarMul(HashFunThree(SKbi, Serv, tesb), g)) in
+let Re_C0 = Pair(g, C0) in 
+let Re_Cb2 = Pair(C0, TKbi) in
+out(SDi_ESB_public_net, (Re_C0, Cb1, Re_Cb2, tesb));
+event endESB_ReEnc;
+0.
+
+
+let pESA =
+out(ESA_DMCA_registration_net, (EIDa, Serv));
+(*加密数据*)
+in (ESA_DMCA_registration_net, (lskesa : bitstring));
+in(public_net, (LPKesb : bitstring, EIDb : bitstring));
+let heidb = HashFunOne(EIDb) in
+let RSKab = ScalarMul(lskesa, LPKesb) in 
+let rab = HashFunTwo(RSKab, Serv) in 
+let SKab = ScalarMul(rab, heidb) in
+let yb = ScalarMul(rab, g) in
+new k : bitstring;
+let ED = Enc(m, k) in
+let hed = HashFunOne(ED) in
+let index = Storage(ED) in
+let r = HashFunFour(index, k, tesa, hed) in
+let C0 = ScalarMul(r, g) in
+let X1 = ConcatFour(k, index, hed, tesa) in
+let X2 = GT_exp2(heidb, yb, r) in
+let X3 = HashFunOne(X2) in
+let Cb1 = XOR(X1, X3) in
+let Cb2 = ScalarMul(r, HashFunTwo(C0, Cb1)) in
+out(ESA_ESB_public_net, (Serv, EIDa, C0, Cb1, Cb2, tesa));
+event endESA_Enc;
+0.
+
+process
+( (!pSDi) | (!pESB) | (!pDMCB) | (!pESA) | (!pDMCA))
