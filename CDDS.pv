@@ -65,11 +65,7 @@ equation forall m23 : bitstring, m24 : bitstring; Pair(m23, m24) = Pair(m24, m23
 equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = GT_exp(Pair(m20, m21), m22).
 equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = GT_exp(Pair(m20, m21), m22).
 equation forall m25 : bitstring, m26 : bitstring; XOR(m25, m26) = XOR(m26, m25).
-(*equation forall m30 : bitstring, m31 : bitstring, m32 : bitstring; GT_Div(GT_exp(m30, m31), GT_exp(m30, m32)) = GT_exp(m30, big_Sub(m31, m32)).
-equation forall m27 : bitstring, m28 : bitstring, m29 : bitstring; GT_exp(Pair(m27, m28), m29) = Pair(ScalarMul(m29, m27), m28).
-equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = Pair(ScalarMul(m22, m20), m22).
-equation forall m20 : bitstring, m21 : bitstring, m22 : bitstring; GT_exp2(m20, m21, m22) = Pair(m20, ScalarMul(m22, m21)).
-equation forall m1 : bitstring, m2 : bitstring; G1_Add(ScalarMul(m1, g), ScalarMul(m2, g)) = ScalarMul(big_Add(m1, m2), g).*)
+
 
 
 query attacker(s).
@@ -83,8 +79,7 @@ query attacker(m).
 noninterf RIDi.
 
 query inj-event (endES_Veri) ==> inj-event (endSDi_Sig).
-(*query inj-event (endESB_ReEnc) ==> inj-event (endESA_Enc).
-query inj-event (endSDi_Dec) ==> inj-event (endESB_ReEnc).*)
+
 
 event endSDi_Sig.
 event endES_Veri.
